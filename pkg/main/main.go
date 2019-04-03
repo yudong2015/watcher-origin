@@ -1,13 +1,20 @@
 package main
 
 import (
-	"reflect"
 	"time"
 
 	"github.com/radovskyb/watcher"
 	"openpitrix.io/openpitrix/pkg/logger"
 	"openpitrix.io/watcher/pkg/config"
 )
+
+const (
+    UPDATE_OP_ETCD = "updateOpenpitrixEtcd"
+)
+
+var HANDLERS = map[string]func(){
+    UPDATE_OP_ETCD: UpdateOpenpitrixEtcd,
+}
 
 func main() {
 	config.LoadConf()
@@ -18,14 +25,15 @@ func watch() {
 	w := watcher.New()
 	w.SetMaxEvents(1)
 	w.FilterOps(watcher.Write, watcher.Create)
-	w.Add(config.Global.GlobalConfig.WatchedFile)
+	global := config.Global
+	w.Add(global.GlobalConfig.WatchedFile)
 
 	go func() {
 		for {
 			select {
 			case event := <-w.Event:
 				logger.Info(nil, "%+v", event)
-				reflect.ValueOf()
+			    HANDLERS[global.GlobalConfig.Handler]()
 			case err := <-w.Error:
 				panic(err)
 			case <-w.Closed:
@@ -35,7 +43,7 @@ func watch() {
 		}
 	}()
 
-	var duration time.Duration = time.Duration(config.Global.GlobalConfig.Duration) * time.Second
+	duration := time.Duration(global.GlobalConfig.Duration) * time.Second
 
 	err := w.Start(duration)
 

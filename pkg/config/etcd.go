@@ -19,7 +19,7 @@ type EtcdConfig struct {
 }
 
 
-func openEtcd(config EtcdConfig) *etcd.Etcd {
+func (config EtcdConfig)openEtcd() *etcd.Etcd {
 	endpoints := strings.Split(config.Endpoints, ",")
 	etcd, err := etcd.Connect(endpoints, config.Prefix)
 	if err != nil {

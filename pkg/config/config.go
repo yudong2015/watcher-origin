@@ -6,22 +6,14 @@ import (
 	"openpitrix.io/openpitrix/pkg/logger"
 )
 
-const (
-	UPDATE_OP_ETCD = "UPDATE_OP_ETCD"
-)
-
-var HANDLERS = map[string]string{
-	UPDATE_OP_ETCD: "updateOpenpitrixEtcd",
-}
-
 type Pi struct {
 	GlobalConfig *Config
 	EtcdClient   *etcd.Etcd
 }
 
 type Config struct {
-	WatchedFile string `default:"global_config.yaml"`   //The file that need to be watched
-	Duration    int64    `default:10`                     //The duration for polling cycle which repeats
+	WatchedFile string `default:"/opt/global_config.yaml"`   //The file that need to be watched
+	Duration    int64  `default:10`                     //The duration for polling cycle which repeats
 	Handler     string `default:"updateOpenpitrixEtcd"` //The action func name to run when files change
 	LogLevel    string `default:"info"`
 	Etcd        *EtcdConfig
@@ -44,7 +36,7 @@ func LoadConf() {
 
 	Global = &Pi{
 		GlobalConfig: config,
-		EtcdClient:   openEtcd(*config.Etcd),
+		EtcdClient:   config.Etcd.openEtcd(),
 	}
 
 }
