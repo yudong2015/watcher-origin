@@ -1,4 +1,4 @@
-package config
+package common
 
 import (
 	"strings"
@@ -19,12 +19,12 @@ type EtcdConfig struct {
 }
 
 
-func (config EtcdConfig)openEtcd() *etcd.Etcd {
+func (config *EtcdConfig)OpenEtcd() *etcd.Etcd {
 	endpoints := strings.Split(config.Endpoints, ",")
-	etcd, err := etcd.Connect(endpoints, config.Prefix)
+	client, err := etcd.Connect(endpoints, config.Prefix)
 	if err != nil {
 		logger.Critical(nil, "failed to connect etcd")
 		panic(err)
 	}
-	return etcd
+	return client
 }

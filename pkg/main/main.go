@@ -5,19 +5,16 @@ import (
 
 	"github.com/radovskyb/watcher"
 	"openpitrix.io/openpitrix/pkg/logger"
-	"openpitrix.io/watcher/pkg/config"
+	"openpitrix.io/watcher/pkg/common"
+    "fmt"
 )
 
 const (
-    UPDATE_OP_ETCD = "updateOpenpitrixEtcd"
+    UPDATE_OP_ETCD = "UpdateOpenpitrixEtcd"
 )
 
-var HANDLERS = map[string]func(){
-    UPDATE_OP_ETCD: UpdateOpenpitrixEtcd,
-}
-
 func main() {
-	config.LoadConf()
+	common.LoadConf()
 	watch()
 }
 
@@ -25,15 +22,21 @@ func watch() {
 	w := watcher.New()
 	w.SetMaxEvents(1)
 	w.FilterOps(watcher.Write, watcher.Create)
-	global := config.Global
-	w.Add(global.GlobalConfig.WatchedFile)
+	global := common.Global()
+	w.Add(global.WatchedFile)
 
 	go func() {
 		for {
 			select {
 			case event := <-w.Event:
 				logger.Info(nil, "%+v", event)
-			    HANDLERS[global.GlobalConfig.Handler]()
+                switch global.Handler {
+                case UPDATE_OP_ETCD:
+                    UpdateOpenpitrixEtcd()
+                default:
+                    msg := fmt.Sprintf( "The func %s not exist!", global.Handler)
+                    panic(msg)
+                }
 			case err := <-w.Error:
 				panic(err)
 			case <-w.Closed:
@@ -43,7 +46,7 @@ func watch() {
 		}
 	}()
 
-	duration := time.Duration(global.GlobalConfig.Duration) * time.Second
+	duration := time.Duration(global.Duration) * time.Second
 
 	err := w.Start(duration)
 

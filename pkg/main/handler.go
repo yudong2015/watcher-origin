@@ -1,7 +1,7 @@
 package main
 
 import (
-    "openpitrix.io/watcher/pkg/config"
+    "openpitrix.io/watcher/pkg/common"
     "io/ioutil"
     yaml "gopkg.in/yaml.v2"
     "openpitrix.io/openpitrix/pkg/logger"
@@ -21,13 +21,13 @@ func init(){
 
 
 func UpdateOpenpitrixEtcd() {
-    global := config.Global
-    etcdClient := global.EtcdClient
+    global := common.Global()
+    etcd := global.Etcd.OpenEtcd()
 
     //read global_config file and convert to map
-    content, err := ioutil.ReadFile(global.GlobalConfig.WatchedFile)
+    content, err := ioutil.ReadFile(global.WatchedFile)
     if err != nil {
-        logger.Critical(nil, "Failed to read %s: %+v", global.GlobalConfig.WatchedFile, err)
+        logger.Critical(nil, "Failed to read %s: %+v", global.WatchedFile, err)
         return
     }
     newConfigMap := OpenpitrixConfig{}
@@ -38,8 +38,8 @@ func UpdateOpenpitrixEtcd() {
 
     //get old config from etcd, and compare with global_config
     ctx := context.Background()
-    err = etcdClient.Dlock(ctx, config.DlockKey, func() error {
-        get, err := etcdClient.Get(ctx, config.GlobalConfigKey)
+    err = etcd.Dlock(ctx, common.DlockKey, func() error {
+        get, err := etcd.Get(ctx, common.GlobalConfigKey)
         if err != nil {
             return err
         }
@@ -58,7 +58,7 @@ func UpdateOpenpitrixEtcd() {
             logger.Debug(nil, "%v", oldConfigMap)
         }
 
-        _, err = etcdClient.Put(ctx, config.GlobalConfigKey, string(oldConfig))
+        _, err = etcd.Put(ctx, common.GlobalConfigKey, string(oldConfig))
         if err != nil {
             logger.Critical(nil, "Failed to put data into etcd: %+v", err)
         }
