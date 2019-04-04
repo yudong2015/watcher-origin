@@ -1,95 +1,121 @@
 package main
 
 import (
-    "openpitrix.io/watcher/pkg/common"
-    "io/ioutil"
-    yaml "gopkg.in/yaml.v2"
-    "openpitrix.io/openpitrix/pkg/logger"
-    "context"
-    "reflect"
+	"context"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"openpitrix.io/openpitrix/pkg/logger"
+	"openpitrix.io/watcher/pkg/common"
+	"reflect"
 )
 
-type OpenpitrixConfig map[string]interface{}
+type AnyMap map[interface{}]interface{}
 
 var IGNORE_KEYS map[string]interface{}
 
-func init(){
-    IGNORE_KEYS = map[string]interface{}{
-        "runtime": true,
-    }
+func init() {
+	IGNORE_KEYS = map[string]interface{}{
+		"runtime": true,
+	}
 }
-
 
 func UpdateOpenpitrixEtcd() {
-    global := common.Global()
-    etcd := global.Etcd.OpenEtcd()
+	global := common.Global
+	etcd := global.Etcd.OpenEtcd()
+	defer etcd.Close()
 
-    //read global_config file and convert to map
-    content, err := ioutil.ReadFile(global.WatchedFile)
-    if err != nil {
-        logger.Critical(nil, "Failed to read %s: %+v", global.WatchedFile, err)
-        return
-    }
-    newConfigMap := OpenpitrixConfig{}
-    err = yaml.Unmarshal(content, newConfigMap)
-    if err != nil {
-        logger.Critical(nil, "Failed to Unmarshal to newConfigMap: %+v", err)
-    }
+	var content []byte
+	var oldConfig []byte
+	newConfigMap := AnyMap{}
+	oldConfigMap := AnyMap{}
 
-    //get old config from etcd, and compare with global_config
-    ctx := context.Background()
-    err = etcd.Dlock(ctx, common.DlockKey, func() error {
-        get, err := etcd.Get(ctx, common.GlobalConfigKey)
-        if err != nil {
-            return err
-        }
-        var oldConfig []byte
-        if get.Count == 0 {
-            oldConfig = content
-        } else {
-            oldConfig = get.Kvs[0].Value
-            oldConfigMap := OpenpitrixConfig{}
-            err := yaml.Unmarshal(oldConfig, oldConfigMap)
-            if err != nil {
-                return err
-            }
-            logger.Debug(nil, "%v", oldConfigMap)
-            compareOpenpitrixConfig(newConfigMap, oldConfigMap, IGNORE_KEYS)
-            logger.Debug(nil, "%v", oldConfigMap)
-        }
+	//read global_config file and convert to map
+	content, err := ioutil.ReadFile(global.WatchedFile)
+	if err != nil {
+		logger.Critical(nil, "Failed to read %s: %+v", global.WatchedFile, err)
+		return //just do nothing if failed to read file
+	}
+	logger.Debug(nil, "global_config_yaml: %s", content)
+	err = yaml.Unmarshal(content, newConfigMap)
+	if err != nil {
+		logger.Critical(nil, "Failed to Unmarshal to newConfigMap: %+v", err)
+	}
+	logger.Debug(nil, "global_config_map: %v", newConfigMap)
 
-        _, err = etcd.Put(ctx, common.GlobalConfigKey, string(oldConfig))
-        if err != nil {
-            logger.Critical(nil, "Failed to put data into etcd: %+v", err)
-        }
-        return nil
-    })
-    if err != nil {
-        logger.Critical(nil, "Failed to update etcd: %+v", err)
-    }
+	//get old config from etcd, and compare with global_config
+	ctx, cancel := context.WithTimeout(context.Background(), common.EtcdDlockTimeOut)
+	err = etcd.Dlock(ctx, common.DlockKey, func() error {
+		get, err := etcd.Get(ctx, common.GlobalConfigKey)
+		if err != nil {
+			return err
+		}
+
+		var modifyed = new(bool)
+		if get.Count == 0 {
+			//init global_config if empty in etcd
+			oldConfig = content
+		} else {
+			//update old config from new config
+			logger.Debug(nil, "get: %s", get.Kvs[0].Value)
+			oldConfig = get.Kvs[0].Value
+			err := yaml.Unmarshal(oldConfig, oldConfigMap)
+			if err != nil {
+				return err
+			}
+			compareOpenpitrixConfig(newConfigMap, oldConfigMap, IGNORE_KEYS, modifyed)
+			logger.Debug(nil, "modifyed: %t, Config updated: %v", *modifyed, oldConfigMap)
+		}
+
+		if *modifyed { //put updated config to etcd
+			oldConfig, err = yaml.Marshal(oldConfigMap)
+			if err != nil {
+				logger.Critical(nil, "Failed to convert oldConfigMap to oldConfig: %+v", err)
+
+			}
+			_, err := etcd.Put(ctx, common.GlobalConfigKey, string(oldConfig))
+			if err != nil {
+				logger.Critical(nil, "Failed to put data into etcd: %+v", err)
+			}
+		}
+
+		cancel()
+		return nil
+	})
+	if err != nil {
+		logger.Critical(nil, "Failed to update etcd: %+v", err)
+	}
 }
-
 
 //Base old config in etcd, update that from new config.
-func compareOpenpitrixConfig(new, old map[string]interface{}, ignoreKeys map[string]interface{}) {
-    for k, v := range old {
+//return if there is diffrence from new and old
+func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{}, modifyed *bool){
+	for k, v := range old {
+		kStr := k.(string)
+		//check if k is in ignore updating map
+		var t interface{}
+		if ignoreKeys == nil || ignoreKeys[kStr] == nil {
+			t = nil
+		} else {
+			t = reflect.TypeOf(ignoreKeys[kStr]).Kind()
+		}
 
-        //get
-        t := reflect.TypeOf(ignoreKeys[k]).Kind()
-        if t == reflect.Bool && ignoreKeys[k].(bool) {
-            return
-        } else if t == reflect.Map {
-            ignoreKeys = ignoreKeys[k].(map[string]interface{})
-        }
+		if t == reflect.Bool && ignoreKeys[kStr].(bool) {
+			continue //olny in this condition, ignore update old config
+		} else if t == reflect.Map {
+			//get sub-ignore-keys
+			ignoreKeys = ignoreKeys[kStr].(map[string]interface{})
+		}
 
-        switch v.(type) {
-        case map[string]interface{}:
-            compareOpenpitrixConfig(new[k].(map[string]interface{}), v.(map[string]interface{}), ignoreKeys)
-        default:
-            if new[k] != v {
-                old[k] = new[k]
-            }
-        }
-    }
+		//update old config from new config
+		switch reflect.TypeOf(v).Kind() {
+		case reflect.Map:
+			compareOpenpitrixConfig(new[k].(AnyMap), v.(AnyMap), ignoreKeys, modifyed)
+		default:
+			if new[k] != v {
+				logger.Debug(nil, "Updating, key: %s, oldValue: %v, newValue: %v", k, v, new[k])
+				old[k] = new[k]
+				*modifyed = true
+			}
+		}
+	}
 }
-

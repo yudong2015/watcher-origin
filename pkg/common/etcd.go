@@ -5,12 +5,14 @@ import (
 
 	"openpitrix.io/openpitrix/pkg/etcd"
 	"openpitrix.io/openpitrix/pkg/logger"
+	"time"
 )
 
 
 const (
 	GlobalConfigKey = "global_config"
 	DlockKey        = "dlock_" + GlobalConfigKey
+	EtcdDlockTimeOut = time.Second * 60
 )
 
 type EtcdConfig struct {
@@ -21,10 +23,12 @@ type EtcdConfig struct {
 
 func (config *EtcdConfig)OpenEtcd() *etcd.Etcd {
 	endpoints := strings.Split(config.Endpoints, ",")
+	logger.Info(nil,"Start to open etcd: %v...", config)
 	client, err := etcd.Connect(endpoints, config.Prefix)
 	if err != nil {
 		logger.Critical(nil, "failed to connect etcd")
 		panic(err)
 	}
+	logger.Info(nil,"Opened etcd.")
 	return client
 }

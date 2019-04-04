@@ -23,12 +23,12 @@ cluster:
   frontgate_auto_delete: true
   frontgate_auto_update: false
 job:
-  max_working_jobs: 20
+  max_working_jobs: 22
 task:
   max_working_tasks: 20
 pilot:
   ip: 127.0.0.1
-  port: 9114
+  port: 9944
 #  runtime:
 #    qingcloud:
 #      api_server: api.qingcloud.com

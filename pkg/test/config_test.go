@@ -30,8 +30,8 @@ func TestLoadConf(t *testing.T) {
     for k, v := range ENVs {
         os.Setenv(k, v)
     }
-    global := common.LoadConf()
-
+    common.LoadConf()
+    global := common.Global
 
     if global.Handler!=ENVs[HANDLER] {
         t.Errorf("Handler value is wrong: %s, want: %s", global.Handler, ENVs[HANDLER])

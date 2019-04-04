@@ -16,19 +16,15 @@ type Config struct {
 	Etcd        EtcdConfig
 }
 
-var global *Config
+var Global *Config
 
-func Global() *Config {
-    return global
-}
-
-func LoadConf() *Config {
+func LoadConf() {
 	loader := multiconfig.MultiLoader(
 	   &multiconfig.TagLoader{},
 	   &multiconfig.EnvironmentLoader{Prefix: CONFIG_PREFIX, CamelCase: true},
      )
 	//get config from env
-	Global := &Config{}
+	Global = &Config{}
 	err := loader.Load(Global)
 	if err != nil {
 		errMsg := fmt.Sprintf("Failed to load config: %+v", err)
@@ -37,6 +33,4 @@ func LoadConf() *Config {
 
 	logger.SetLevelByString(Global.LogLevel)
 	logger.Debug(nil, "LoadConf: %+v", Global)
-
-	return Global
 }

@@ -3,40 +3,31 @@ package main
 import (
 	"time"
 
+	"fmt"
 	"github.com/radovskyb/watcher"
 	"openpitrix.io/openpitrix/pkg/logger"
 	"openpitrix.io/watcher/pkg/common"
-    "fmt"
 )
 
 const (
-    UPDATE_OP_ETCD = "UpdateOpenpitrixEtcd"
+	UPDATE_OP_ETCD = "UpdateOpenpitrixEtcd"
 )
-
-func main() {
-	common.LoadConf()
-	watch()
-}
 
 func watch() {
 	w := watcher.New()
 	w.SetMaxEvents(1)
 	w.FilterOps(watcher.Write, watcher.Create)
-	global := common.Global()
+
+	global := common.Global
 	w.Add(global.WatchedFile)
+	logger.Info(nil, "Watching file: %s", global.WatchedFile)
 
 	go func() {
 		for {
 			select {
 			case event := <-w.Event:
 				logger.Info(nil, "%+v", event)
-                switch global.Handler {
-                case UPDATE_OP_ETCD:
-                    UpdateOpenpitrixEtcd()
-                default:
-                    msg := fmt.Sprintf( "The func %s not exist!", global.Handler)
-                    panic(msg)
-                }
+				handler()
 			case err := <-w.Error:
 				panic(err)
 			case <-w.Closed:
@@ -54,4 +45,20 @@ func watch() {
 		logger.Critical(nil, "Failed to start watching: %+v", err)
 		panic(err)
 	}
+}
+
+func handler() {
+    switch common.Global.Handler {
+    case UPDATE_OP_ETCD:
+        UpdateOpenpitrixEtcd()
+    default:
+        msg := fmt.Sprintf("The func %s not exist!", common.Global.Handler)
+        panic(msg)
+    }
+}
+
+func main() {
+    common.LoadConf()
+    handler()
+    watch()
 }
