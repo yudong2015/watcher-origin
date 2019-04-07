@@ -8,18 +8,18 @@ import (
 
 func aa() {
 
-	etcdConfig := common.EtcdConfig{
+	etcd := common.Etcd{
 		Prefix:    "open",
 		Endpoints: "172.31.140.135:2379",
 	}
 	key := "global_config"
-	etcd := etcdConfig.OpenEtcd()
+	etcd.NewEtcdClient()
 	//get old config from etcd, and compare with global_config
 	ctx := context.Background()
-	err2 := etcd.Dlock(ctx, common.DlockKey, func() error {
-		defer etcd.Close()
+	err2 := etcd.Dlock(ctx, func() error {
+		defer etcd.Client.Close()
 		//_, err := etcd.Put(ctx, key, "mmmmmmmm")
-		get, err := etcd.Get(ctx, key)
+		get, err := etcd.Client.Get(ctx, key)
 		if err != nil {
 			return err
 		}

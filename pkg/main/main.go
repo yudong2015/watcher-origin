@@ -27,7 +27,7 @@ func watch() {
 			select {
 			case event := <-w.Event:
 				logger.Info(nil, "%+v", event)
-				handler()
+				handle()
 			case err := <-w.Error:
 				panic(err)
 			case <-w.Closed:
@@ -47,7 +47,7 @@ func watch() {
 	}
 }
 
-func handler() {
+func handle() {
     switch common.Global.Handler {
     case UPDATE_OP_ETCD:
         UpdateOpenpitrixEtcd()
@@ -59,6 +59,6 @@ func handler() {
 
 func main() {
     common.LoadConf()
-    handler()
+    handle()
     watch()
 }

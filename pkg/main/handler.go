@@ -21,8 +21,7 @@ func init() {
 
 func UpdateOpenpitrixEtcd() {
 	global := common.Global
-	etcd := global.Etcd.OpenEtcd()
-	defer etcd.Close()
+	etcd := global.Etcd
 
 	var content []byte
 	var oldConfig []byte
@@ -43,13 +42,15 @@ func UpdateOpenpitrixEtcd() {
 	logger.Debug(nil, "global_config_map: %v", newConfigMap)
 
 	//get old config from etcd, and compare with global_config
+	etcd.NewEtcdClient()
+	defer etcd.Client.Close()
 	ctx, cancel := context.WithTimeout(context.Background(), common.EtcdDlockTimeOut)
-	err = etcd.Dlock(ctx, common.DlockKey, func() error {
-		get, err := etcd.Get(ctx, common.GlobalConfigKey)
+	defer cancel()
+	err = etcd.Dlock(ctx, func() error {
+		get, err := etcd.Client.Get(ctx, common.GlobalConfigKey)
 		if err != nil {
 			return err
 		}
-
 		var modifyed = new(bool)
 		if get.Count == 0 {
 			//init global_config if empty in etcd
@@ -72,13 +73,11 @@ func UpdateOpenpitrixEtcd() {
 				logger.Critical(nil, "Failed to convert oldConfigMap to oldConfig: %+v", err)
 
 			}
-			_, err := etcd.Put(ctx, common.GlobalConfigKey, string(oldConfig))
+			_, err := etcd.Client.Put(ctx, common.GlobalConfigKey, string(oldConfig))
 			if err != nil {
 				logger.Critical(nil, "Failed to put data into etcd: %+v", err)
 			}
 		}
-
-		cancel()
 		return nil
 	})
 	if err != nil {
