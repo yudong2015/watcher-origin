@@ -50,7 +50,7 @@ func (etcd *Etcd) NewMutex(ctx context.Context) (*Mutex, error) {
 	if etcd.Client == nil {
 		return nil, NilError{"The etcd client is nil!"}
 	}
-	logger.Debug(nil,"Create new session of etcd...")
+	logger.Debug(nil, "Create new session of etcd...")
 	session, err := concurrency.NewSession(etcd.Client, concurrency.WithContext(ctx))
 	if err != nil {
 		return nil, err

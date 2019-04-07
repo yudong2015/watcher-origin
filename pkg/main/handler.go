@@ -87,7 +87,7 @@ func UpdateOpenpitrixEtcd() {
 
 //Base old config in etcd, update that from new config.
 //return if there is diffrence from new and old
-func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{}, modifyed *bool){
+func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{}, modifyed *bool) {
 	for k, v := range old {
 		kStr := k.(string)
 		//check if k is in ignore updating map

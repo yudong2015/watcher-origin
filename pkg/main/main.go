@@ -48,17 +48,17 @@ func watch() {
 }
 
 func handle() {
-    switch common.Global.Handler {
-    case UPDATE_OP_ETCD:
-        UpdateOpenpitrixEtcd()
-    default:
-        msg := fmt.Sprintf("The func %s not exist!", common.Global.Handler)
-        panic(msg)
-    }
+	switch common.Global.Handler {
+	case UPDATE_OP_ETCD:
+		UpdateOpenpitrixEtcd()
+	default:
+		msg := fmt.Sprintf("The func %s not exist!", common.Global.Handler)
+		panic(msg)
+	}
 }
 
 func main() {
-    common.LoadConf()
-    handle()
-    watch()
+	common.LoadConf()
+	handle()
+	watch()
 }
