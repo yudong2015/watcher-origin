@@ -2,10 +2,12 @@ package common
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/koding/multiconfig"
+
 	"openpitrix.io/openpitrix/pkg/logger"
 	"openpitrix.io/watcher/pkg/test"
-	"os"
 )
 
 const CONFIG_PREFIX = "WATCHER"

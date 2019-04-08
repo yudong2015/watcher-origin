@@ -1,10 +1,12 @@
-package main
+package watch
 
 import (
 	"time"
 
 	"fmt"
+
 	"github.com/radovskyb/watcher"
+
 	"openpitrix.io/openpitrix/pkg/logger"
 	"openpitrix.io/watcher/pkg/common"
 )

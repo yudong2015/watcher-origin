@@ -1,12 +1,14 @@
-package main
+package watch
 
 import (
 	"context"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"reflect"
+
+	"gopkg.in/yaml.v2"
+
 	"openpitrix.io/openpitrix/pkg/logger"
 	"openpitrix.io/watcher/pkg/common"
-	"reflect"
 )
 
 type AnyMap map[interface{}]interface{}

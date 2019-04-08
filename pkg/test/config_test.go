@@ -1,9 +1,10 @@
 package test
 
 import (
-	"openpitrix.io/watcher/pkg/common"
 	"strconv"
 	"testing"
+
+	"openpitrix.io/watcher/pkg/common"
 )
 
 func TestLoadConf(t *testing.T) {
