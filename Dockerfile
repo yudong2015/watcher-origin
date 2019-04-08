@@ -9,15 +9,11 @@ RUN apk add --no-cache git
 WORKDIR /go/src/openpitrix.io/watcher
 COPY . .
 
-ENV GO111MODULE=on
-ENV CGO_ENABLED=0
-ENV GOOS=linux
-
-RUN mkdir -p /openpitrix_bin
-RUN go build -v -a -installsuffix cgo -ldflags '-w' -o /openpitrix_bin/watch pkg/watch/main.go
-
+RUN mkdir -p /watcher_bin
+RUN CGO_ENABLED=0 GOOS=linux GOBIN=/watcher_bin go install -v -a -ldflags '-w -s' -tags netgo openpitrix.io/watcher/cmd/watch
 
 FROM alpine:3.7
-COPY --from=builder /openpitrix_bin/watch /usr/local/bin/
+COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
+COPY --from=builder /watcher_bin/watch /usr/local/bin/
 
-CMD ["/usr/local/bin/watch"]
+CMD ["sh"]

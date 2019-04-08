@@ -1,4 +1,8 @@
-package watch
+// Copyright 2019 The OpenPitrix Authors. All rights reserved.
+// Use of this source code is governed by a Apache license
+// that can be found in the LICENSE file.
+
+package handler
 
 import (
 	"context"
@@ -44,11 +48,10 @@ func UpdateOpenpitrixEtcd() {
 	logger.Debug(nil, "global_config_map: %v", newConfigMap)
 
 	//get old config from etcd, and compare with global_config
-	etcd.NewEtcdClient()
-	defer etcd.Client.Close()
 	ctx, cancel := context.WithTimeout(context.Background(), common.EtcdDlockTimeOut)
 	defer cancel()
 	err = etcd.Dlock(ctx, func() error {
+	    logger.Info(nil,"Updating openpitrix etcd...")
 		get, err := etcd.Client.Get(ctx, common.GlobalConfigKey)
 		if err != nil {
 			return err

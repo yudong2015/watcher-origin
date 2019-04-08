@@ -28,7 +28,7 @@ task:
   max_working_tasks: 20
 pilot:
   ip: 127.0.0.1
-  port: 9999
+  port: 9111
 #  runtime:
 #    qingcloud:
 #      api_server: api.qingcloud.com

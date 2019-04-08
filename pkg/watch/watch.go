@@ -1,21 +1,26 @@
+// Copyright 2019 The OpenPitrix Authors. All rights reserved.
+// Use of this source code is governed by a Apache license
+// that can be found in the LICENSE file.
+
 package watch
 
 import (
+	"fmt"
 	"time"
 
-	"fmt"
-
 	"github.com/radovskyb/watcher"
-
 	"openpitrix.io/openpitrix/pkg/logger"
 	"openpitrix.io/watcher/pkg/common"
+	"openpitrix.io/watcher/pkg/handler"
 )
 
 const (
 	UPDATE_OP_ETCD = "UpdateOpenpitrixEtcd"
 )
 
-func watch() {
+func Watch() {
+	handle() //init global_config
+
 	w := watcher.New()
 	w.SetMaxEvents(1)
 	w.FilterOps(watcher.Write, watcher.Create)
@@ -52,15 +57,9 @@ func watch() {
 func handle() {
 	switch common.Global.Handler {
 	case UPDATE_OP_ETCD:
-		UpdateOpenpitrixEtcd()
+		handler.UpdateOpenpitrixEtcd()
 	default:
 		msg := fmt.Sprintf("The func %s not exist!", common.Global.Handler)
 		panic(msg)
 	}
-}
-
-func main() {
-	common.LoadConf()
-	handle()
-	watch()
 }

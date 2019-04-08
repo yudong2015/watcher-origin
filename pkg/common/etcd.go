@@ -1,4 +1,4 @@
-// Copyright 2018 The OpenPitrix Authors. All rights reserved.
+// Copyright 2019 The OpenPitrix Authors. All rights reserved.
 // Use of this source code is governed by a Apache license
 // that can be found in the LICENSE file.
 
@@ -62,23 +62,26 @@ func (etcd *Etcd) NewMutex(ctx context.Context) (*Mutex, error) {
 // Lock locks the mutex with a cancelable context. If the context is canceled
 // while trying to acquire the lock, the mutex tries to clean its stale lock entry.
 func (m *Mutex) Lock(ctx context.Context) error {
+	logger.Debug(ctx, "Lock etcd client...")
 	return m.Mutex.Lock(ctx)
 }
 
 func (m *Mutex) Unlock(ctx context.Context) error {
+	logger.Debug(ctx, "Unlock etcd client...")
 	return m.Mutex.Unlock(ctx)
 }
 
 type callback func() error
 
 func (etcd *Etcd) Dlock(ctx context.Context, cb callback) error {
+	etcd.NewEtcdClient()
+	defer etcd.Client.Close()
 	logger.Info(ctx, "Create dlock with key [%s]", DlockKey)
 	mutex, err := etcd.NewMutex(ctx)
 	if err != nil {
 		logger.Critical(ctx, "Dlock lock error, failed to create mutex: %+v", err)
 		panic(err)
 	}
-	logger.Debug(ctx, "Locking...")
 	err = mutex.Lock(ctx)
 	if err != nil {
 		logger.Critical(ctx, "Dlock lock error, failed to lock mutex: %+v", err)
