@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+
 	"github.com/koding/multiconfig"
 
 	"openpitrix.io/openpitrix/pkg/logger"
@@ -26,14 +27,20 @@ func LoadConf() {
 	)
 	//get config from env
 	Global.Etcd = &Etcd{}
-	err := loader.Load(Global)
+	err := loader.Load(Global.Etcd)
 	if err != nil {
-		errMsg := fmt.Sprintf("Failed to load config: %+v", err)
+		errMsg := fmt.Sprintf("Failed to load etcd config: %+v", err)
 		panic(errMsg)
 	}
+	err = loader.Load(Global)
+    if err != nil {
+        errMsg := fmt.Sprintf("Failed to load global config: %+v", err)
+        panic(errMsg)
+    }
 
 	logger.SetLevelByString(Global.LogLevel)
-	logger.Debug(nil, "LoadConf: %+v", Global)
+	logger.Debug(nil, "Etcd config: %+v", Global.Etcd)
+	logger.Debug(nil, "Global config: %+v", Global)
 }
 
 type NilError struct {

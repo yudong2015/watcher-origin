@@ -116,7 +116,7 @@ func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{},
 			compareOpenpitrixConfig(new[k].(AnyMap), v.(AnyMap), ignoreKeys, modifyed)
 		default:
 			if new[k] != v {
-				logger.Debug(nil, "Updating, key: %s, oldValue: %v, newValue: %v", k, v, new[k])
+				logger.Info(nil, "Updating, key: %s, oldValue: %v, newValue: %v", k, v, new[k])
 				old[k] = new[k]
 				*modifyed = true
 			}
