@@ -2,6 +2,6 @@
 
 vendor/*
 !vendor/vendor.json
-!vendor/google.golang.org/*
+!vendor/google.golang.org/
 watcher.iml
 tmp/*
