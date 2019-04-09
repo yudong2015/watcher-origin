@@ -18,7 +18,7 @@ var Envs = map[string]string{
 	WATCHED_FILE:   "./test/global_config.yaml",
 	DURATION:       "5",
 	LOG_LEVEL:      "debug",
-	//ETCD_PREFIX:    "openpitrix",
+	ETCD_PREFIX:    "openpitrix",
 	ETCD_ENDPOINTS: "127.0.0.1:2379",
 }
 

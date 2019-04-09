@@ -51,7 +51,7 @@ func UpdateOpenpitrixEtcd() {
 	ctx, cancel := context.WithTimeout(context.Background(), common.EtcdDlockTimeOut)
 	defer cancel()
 	err = etcd.Dlock(ctx, func() error {
-	    logger.Info(nil,"Updating openpitrix etcd...")
+		logger.Info(nil, "Updating openpitrix etcd...")
 		get, err := etcd.Client.Get(ctx, common.GlobalConfigKey)
 		if err != nil {
 			return err

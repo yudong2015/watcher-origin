@@ -7,14 +7,9 @@ package main
 import (
 	"openpitrix.io/watcher/pkg/common"
 	"openpitrix.io/watcher/pkg/watch"
-	"openpitrix.io/watcher/test"
-	"os"
 )
 
 func main() {
-	if os.Getenv("LOCAL") == "1" {
-		test.LocalEnv()
-	}
 	common.LoadConf()
 	watch.Watch()
 }

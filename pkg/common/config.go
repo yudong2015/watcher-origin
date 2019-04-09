@@ -11,9 +11,9 @@ import (
 const CONFIG_PREFIX = "WATCHER"
 
 type Config struct {
-	WatchedFile string `default:"/opt/global-config"`   //The file that need to be watched
-	Duration    int64  `default:"30"`                   //The duration for polling cycle which repeats
-	Handler     string `default:"UpdateOpenpitrixEtcd"` //The action func name to run when files change
+	WatchedFile string `default:"/opt/global_config.yaml"` //The file that need to be watched
+	Duration    int64  `default:"10"`                      //The duration for polling cycle which repeats
+	Handler     string `default:"UpdateOpenpitrixEtcd"`    //The action func name to run when files change
 	LogLevel    string `default:"info"`
 	Etcd        *Etcd
 }
@@ -33,10 +33,10 @@ func LoadConf() {
 		panic(errMsg)
 	}
 	err = loader.Load(Global)
-    if err != nil {
-        errMsg := fmt.Sprintf("Failed to load global config: %+v", err)
-        panic(errMsg)
-    }
+	if err != nil {
+		errMsg := fmt.Sprintf("Failed to load global config: %+v", err)
+		panic(errMsg)
+	}
 
 	logger.SetLevelByString(Global.LogLevel)
 	logger.Debug(nil, "Etcd config: %+v", Global.Etcd)
