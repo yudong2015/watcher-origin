@@ -15,21 +15,19 @@ import (
 	"go.etcd.io/etcd/clientv3/namespace"
 
 	"openpitrix.io/openpitrix/pkg/logger"
+	"openpitrix.io/openpitrix/pkg/pi"
 )
 
 const (
-	GlobalConfigKey  = "global_config"
-	DlockKey         = "dlock_" + GlobalConfigKey
 	EtcdDlockTimeOut = time.Second * 60
 )
 
 type Etcd struct {
-	Prefix    string `default:"openpitrix"`
 	Endpoints string `default:"openpitrix-etcd:2379"` // Example: "localhost:2379,localhost:22379,localhost:32379"
 	Client    *clientv3.Client
 }
 
-func (etcd *Etcd) NewEtcdClient() {
+func (etcd *Etcd) NewEtcdClient(prefix string) {
 	logger.Info(nil, "New client of etcd: %+v...", etcd)
 	cli, err := clientv3.New(clientv3.Config{
 		Endpoints:   strings.Split(etcd.Endpoints, ","),
@@ -39,7 +37,7 @@ func (etcd *Etcd) NewEtcdClient() {
 		logger.Critical(nil, "Failed to connect etcd.")
 		panic(err)
 	}
-	cli.KV = namespace.NewKV(cli.KV, etcd.Prefix)
+	cli.KV = namespace.NewKV(cli.KV, prefix)
 	etcd.Client = cli
 }
 
@@ -47,7 +45,7 @@ type Mutex struct {
 	*concurrency.Mutex
 }
 
-func (etcd *Etcd) NewMutex(ctx context.Context) (*Mutex, error) {
+func (etcd *Etcd) NewMutex(ctx context.Context, dlockKey string) (*Mutex, error) {
 	if etcd.Client == nil {
 		return nil, NilError{"The etcd client is nil!"}
 	}
@@ -56,7 +54,7 @@ func (etcd *Etcd) NewMutex(ctx context.Context) (*Mutex, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Mutex{concurrency.NewMutex(session, DlockKey)}, nil
+	return &Mutex{concurrency.NewMutex(session, dlockKey)}, nil
 }
 
 // Lock locks the mutex with a cancelable context. If the context is canceled
@@ -74,10 +72,10 @@ func (m *Mutex) Unlock(ctx context.Context) error {
 type callback func() error
 
 func (etcd *Etcd) Dlock(ctx context.Context, cb callback) error {
-	etcd.NewEtcdClient()
+	etcd.NewEtcdClient(pi.EtcdPrefix)
 	defer etcd.Client.Close()
-	logger.Info(ctx, "Create dlock with key [%s]", DlockKey)
-	mutex, err := etcd.NewMutex(ctx)
+	logger.Info(ctx, "Create dlock with key [%s]", pi.DlockKey)
+	mutex, err := etcd.NewMutex(ctx, pi.DlockKey)
 	if err != nil {
 		logger.Critical(ctx, "Dlock lock error, failed to create mutex: %+v", err)
 		panic(err)

@@ -13,6 +13,7 @@ import (
 
 	"openpitrix.io/openpitrix/pkg/logger"
 	"openpitrix.io/watcher/pkg/common"
+	"openpitrix.io/openpitrix/pkg/pi"
 )
 
 type AnyMap map[interface{}]interface{}
@@ -52,12 +53,12 @@ func UpdateOpenpitrixEtcd() {
 	defer cancel()
 	err = etcd.Dlock(ctx, func() error {
 		logger.Info(nil, "Updating openpitrix etcd...")
-		get, err := etcd.Client.Get(ctx, common.GlobalConfigKey)
+		get, err := etcd.Client.Get(ctx, pi.GlobalConfigKey)
 		if err != nil {
 			return err
 		}
 		var modifyed = new(bool)
-		logger.Debug(nil, "get-count: %s", get.Count)
+		logger.Debug(nil, "get-count: %d", get.Count)
 		logger.Debug(nil, "get: %+v", get.Kvs)
 		if get.Count == 0 {
 			//init global_config if empty in etcd
@@ -80,7 +81,7 @@ func UpdateOpenpitrixEtcd() {
 				logger.Critical(nil, "Failed to convert oldConfigMap to oldConfig: %+v", err)
 
 			}
-			_, err := etcd.Client.Put(ctx, common.GlobalConfigKey, string(oldConfig))
+			_, err := etcd.Client.Put(ctx, pi.GlobalConfigKey, string(oldConfig))
 			if err != nil {
 				logger.Critical(nil, "Failed to put data into etcd: %+v", err)
 			}
