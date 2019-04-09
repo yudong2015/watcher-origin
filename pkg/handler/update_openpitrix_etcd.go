@@ -12,8 +12,8 @@ import (
 	"gopkg.in/yaml.v2"
 
 	"openpitrix.io/openpitrix/pkg/logger"
-	"openpitrix.io/watcher/pkg/common"
 	"openpitrix.io/openpitrix/pkg/pi"
+	"openpitrix.io/watcher/pkg/common"
 )
 
 type AnyMap map[interface{}]interface{}
@@ -23,6 +23,9 @@ var IGNORE_KEYS map[string]interface{}
 func init() {
 	IGNORE_KEYS = map[string]interface{}{
 		"runtime": true,
+		"cluster": {
+			"registry_mirror": true,
+		},
 	}
 }
 
@@ -65,7 +68,6 @@ func UpdateOpenpitrixEtcd() {
 			oldConfig = content
 		} else {
 			//update old config from new config
-			logger.Debug(nil, "get: %s", get.Kvs[0].Value)
 			oldConfig = get.Kvs[0].Value
 			err := yaml.Unmarshal(oldConfig, oldConfigMap)
 			if err != nil {
@@ -98,6 +100,11 @@ func UpdateOpenpitrixEtcd() {
 func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{}, modifyed *bool) {
 	for k, v := range old {
 		kStr := k.(string)
+
+		logger.Debug(nil, "key: %s", kStr)
+		logger.Debug(nil, "oldValue: %+v", v)
+		logger.Debug(nil, "newValue: %+v", new[k])
+
 		//check if k is in ignore updating map
 		var t interface{}
 		if ignoreKeys == nil || ignoreKeys[kStr] == nil {
