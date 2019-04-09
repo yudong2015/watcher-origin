@@ -2,3 +2,8 @@
 
 watcher.iml
 tmp/*
+
+vendor/*
+!vendor/vendor.json
+!vendor/google.golang.org/
+!vendor/github.com/radovskyb/

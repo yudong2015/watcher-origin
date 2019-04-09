@@ -9,6 +9,20 @@
 			"revisionTime": "2018-08-15T10:47:33Z"
 		},
 		{
+			"checksumSHA1": "5gnBrB9ISzgkQe5rLOlFp2MqA/8=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/asaskevich/govalidator",
+			"path": "github.com/asaskevich/govalidator",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "0EhLvZ6Og9HYqJtCc2Dzs1EgM30=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/bitly/go-simplejson",
+			"path": "github.com/bitly/go-simplejson",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
 			"checksumSHA1": "Ta/D4CzjyN2/EkKIBwcRvPPp6ic=",
 			"origin": "openpitrix.io/openpitrix/vendor/github.com/coreos/go-systemd/journal",
 			"path": "github.com/coreos/go-systemd/journal",
@@ -33,6 +47,34 @@
 			"path": "github.com/fatih/structs",
 			"revision": "878a968ab22548362a09bdb3322f98b00f470d46",
 			"revisionTime": "2018-10-10T23:17:57Z"
+		},
+		{
+			"checksumSHA1": "nlMa0NX11OCS5UHuJszVGTBboWU=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/ghodss/yaml",
+			"path": "github.com/ghodss/yaml",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "wmiJbuFVCxg22zwXIeLsVCudyeY=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/go-sql-driver/mysql",
+			"path": "github.com/go-sql-driver/mysql",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "dxm0+Bm4sRT6AkV/cehqGK5OJSE=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/gocraft/dbr",
+			"path": "github.com/gocraft/dbr",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "86/3M+EhG+PI2ZMVLmETk44QPm4=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/gocraft/dbr/dialect",
+			"path": "github.com/gocraft/dbr/dialect",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
 		},
 		{
 			"checksumSHA1": "OtzpcS4kb0PT8nj2Lj3nolXn3Bw=",
@@ -98,9 +140,44 @@
 			"revisionTime": "2019-03-30T12:19:37Z"
 		},
 		{
+			"checksumSHA1": "mLmwamaqyrVUNOmTAGaSpnO1YJQ=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/google/gops/agent",
+			"path": "github.com/google/gops/agent",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "4/oP9EPM60f4djEKTtRqMJPaeOo=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/google/gops/internal",
+			"path": "github.com/google/gops/internal",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "jKzg09NDPfnmGeZhp+YSVaq4cb0=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/google/gops/signal",
+			"path": "github.com/google/gops/signal",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
 			"checksumSHA1": "yNyE9MrpDJQAxOxSipSIBgBhuNQ=",
 			"origin": "openpitrix.io/openpitrix/vendor/github.com/google/uuid",
 			"path": "github.com/google/uuid",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "EFilcRi6b0Bf3nckKo3UbeqoW50=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/gorilla/websocket",
+			"path": "github.com/gorilla/websocket",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "gEjGS03N1eysvpQ+FCHTxPcbxXc=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/kardianos/osext",
+			"path": "github.com/kardianos/osext",
 			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
 			"revisionTime": "2019-03-30T12:19:37Z"
 		},
@@ -115,6 +192,20 @@
 			"path": "github.com/radovskyb/watcher",
 			"revision": "f33c874a09dcfac90f008abeee9171d88431e212",
 			"revisionTime": "2019-01-27T04:54:35Z"
+		},
+		{
+			"checksumSHA1": "ooEfaKEeZt34ebW5YibKTvFip8Y=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/sony/sonyflake",
+			"path": "github.com/sony/sonyflake",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "tecPenwUiv3ST5SXOzmM4MqBTUU=",
+			"origin": "openpitrix.io/openpitrix/vendor/github.com/speps/go-hashids",
+			"path": "github.com/speps/go-hashids",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
 		},
 		{
 			"checksumSHA1": "8nCoO1ACxWgrtwUl84Se7YIWVMA=",
@@ -285,6 +376,27 @@
 			"revisionTime": "2019-03-30T12:19:37Z"
 		},
 		{
+			"checksumSHA1": "2LpxYGSf068307b7bhAuVjvzLLc=",
+			"origin": "openpitrix.io/openpitrix/vendor/golang.org/x/crypto/ed25519",
+			"path": "golang.org/x/crypto/ed25519",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "0JTAFXPkankmWcZGQJGScLDiaN8=",
+			"origin": "openpitrix.io/openpitrix/vendor/golang.org/x/crypto/ed25519/internal/edwards25519",
+			"path": "golang.org/x/crypto/ed25519/internal/edwards25519",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "1MGpGDQqnUoRpv7VEcQrXOBydXE=",
+			"origin": "openpitrix.io/openpitrix/vendor/golang.org/x/crypto/pbkdf2",
+			"path": "golang.org/x/crypto/pbkdf2",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
 			"checksumSHA1": "GtamqiJoL7PGHsN454AoffBFMa8=",
 			"origin": "openpitrix.io/openpitrix/vendor/golang.org/x/net/context",
 			"path": "golang.org/x/net/context",
@@ -365,6 +477,13 @@
 			"checksumSHA1": "XJr6+rzzxASewSbC/SCStyGlmuw=",
 			"origin": "openpitrix.io/openpitrix/vendor/golang.org/x/text/unicode/norm",
 			"path": "golang.org/x/text/unicode/norm",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "LiyXfqOzaeQ8vgYZH3t2hUEdVTw=",
+			"origin": "openpitrix.io/openpitrix/vendor/google.golang.org/appengine/cloudsql",
+			"path": "google.golang.org/appengine/cloudsql",
 			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
 			"revisionTime": "2019-03-30T12:19:37Z"
 		},
@@ -565,14 +684,54 @@
 			"revisionTime": "2019-03-30T12:19:37Z"
 		},
 		{
+			"checksumSHA1": "klOgUG8O4wvk2/6m3VrublB6gN8=",
+			"origin": "openpitrix.io/openpitrix/vendor/gopkg.in/square/go-jose.v2",
+			"path": "gopkg.in/square/go-jose.v2",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "Ho5sr2GbiR8S35IRni7vC54d5Js=",
+			"origin": "openpitrix.io/openpitrix/vendor/gopkg.in/square/go-jose.v2/cipher",
+			"path": "gopkg.in/square/go-jose.v2/cipher",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "JFun0lWY9eqd80Js2iWsehu1gc4=",
+			"origin": "openpitrix.io/openpitrix/vendor/gopkg.in/square/go-jose.v2/json",
+			"path": "gopkg.in/square/go-jose.v2/json",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "gMJFFBv2lKqUlg2Kwqd5xnb2qfc=",
+			"origin": "openpitrix.io/openpitrix/vendor/gopkg.in/square/go-jose.v2/jwt",
+			"path": "gopkg.in/square/go-jose.v2/jwt",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
 			"checksumSHA1": "QqDq2x8XOU7IoOR98Cx1eiV5QY8=",
 			"path": "gopkg.in/yaml.v2",
 			"revision": "51d6538a90f86fe93ac480b35f37b2be17fef232",
 			"revisionTime": "2018-11-15T11:05:04Z"
 		},
 		{
+			"checksumSHA1": "RLknqHxWi8ev59Wl4Gfof/yWTrw=",
+			"path": "openpitrix.io/openpitrix/pkg/config",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
 			"checksumSHA1": "z2Ius1fEAYqIvDV3ENlGAoOFVBA=",
 			"path": "openpitrix.io/openpitrix/pkg/constants",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "dfgeTdpYWlFMJzhXHyBPr0cioI4=",
+			"path": "openpitrix.io/openpitrix/pkg/db",
 			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
 			"revisionTime": "2019-03-30T12:19:37Z"
 		},
@@ -589,14 +748,56 @@
 			"revisionTime": "2019-03-30T12:19:37Z"
 		},
 		{
+			"checksumSHA1": "eLYxbOTEzA6Fe/fUqo1hNOLgihc=",
+			"path": "openpitrix.io/openpitrix/pkg/pi",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
 			"checksumSHA1": "E3vPIZa5H8/ZpH/0e7xlWoTOgOc=",
 			"path": "openpitrix.io/openpitrix/pkg/sender",
 			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
 			"revisionTime": "2019-03-30T12:19:37Z"
 		},
 		{
+			"checksumSHA1": "UXnKhiRX6O2VSuPA78OR0+O8uIQ=",
+			"path": "openpitrix.io/openpitrix/pkg/topic",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
 			"checksumSHA1": "kEJgoVP4/EdSwK4ApVBvXyfbWkU=",
 			"path": "openpitrix.io/openpitrix/pkg/util/ctxutil",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "QqTstnj1+KJyj8/WBZ+yUNwJOLI=",
+			"path": "openpitrix.io/openpitrix/pkg/util/idutil",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "NjXQ+hLYa7D8RFVDXmoD9L6cDdY=",
+			"path": "openpitrix.io/openpitrix/pkg/util/jsonutil",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "oUtgptDkH34Y6QMvDblPijFwoPo=",
+			"path": "openpitrix.io/openpitrix/pkg/util/jwtutil",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "ETjnRuSYdXtePrSRD8k4bidJ1N0=",
+			"path": "openpitrix.io/openpitrix/pkg/util/stringutil",
+			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
+			"revisionTime": "2019-03-30T12:19:37Z"
+		},
+		{
+			"checksumSHA1": "pXI0qQY71TsAKlptuhtSEBgpQrc=",
+			"path": "openpitrix.io/openpitrix/pkg/util/yamlutil",
 			"revision": "60dc0632df4d5619bca3e90cf6a2780d9ba05f0d",
 			"revisionTime": "2019-03-30T12:19:37Z"
 		}
