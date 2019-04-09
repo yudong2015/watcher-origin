@@ -57,6 +57,8 @@ func UpdateOpenpitrixEtcd() {
 			return err
 		}
 		var modifyed = new(bool)
+		logger.Debug(nil, "get-count: %s", get.Count)
+		logger.Debug(nil, "get: %+v", get.Kvs)
 		if get.Count == 0 {
 			//init global_config if empty in etcd
 			oldConfig = content
