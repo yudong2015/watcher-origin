@@ -23,9 +23,6 @@ var IGNORE_KEYS map[string]interface{}
 func init() {
 	IGNORE_KEYS = map[string]interface{}{
 		"runtime": true,
-		"cluster": {
-			"registry_mirror": true,
-		},
 	}
 }
 
@@ -118,6 +115,16 @@ func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{},
 		} else if t == reflect.Map {
 			//get sub-ignore-keys
 			ignoreKeys = ignoreKeys[kStr].(map[string]interface{})
+		}
+
+		if v == nil { //check if old value and new value are nil
+			if new == nil || new[k] == nil {
+				continue
+			} else {
+				logger.Info(nil, "Updating, key: %s, oldValue: %v, newValue: %v", k, v, new[k])
+				old[k] = new[k]
+				continue
+			}
 		}
 
 		//update old config from new config
