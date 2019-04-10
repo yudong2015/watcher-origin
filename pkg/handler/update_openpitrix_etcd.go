@@ -57,7 +57,7 @@ func UpdateOpenpitrixEtcd() {
 		if err != nil {
 			return err
 		}
-		var modifyed = new(bool)
+		var modified = new(bool)
 		logger.Debug(nil, "get-count: %d", get.Count)
 		logger.Debug(nil, "get: %+v", get.Kvs)
 		if get.Count == 0 {
@@ -70,11 +70,11 @@ func UpdateOpenpitrixEtcd() {
 			if err != nil {
 				return err
 			}
-			compareOpenpitrixConfig(newConfigMap, oldConfigMap, IGNORE_KEYS, modifyed)
-			logger.Debug(nil, "modifyed: %t, Config updated: %v", *modifyed, oldConfigMap)
+			compareOpenpitrixConfig(newConfigMap, oldConfigMap, IGNORE_KEYS, modified)
+			logger.Debug(nil, "modified: %t, Config updated: %v", *modified, oldConfigMap)
 		}
 
-		if *modifyed { //put updated config to etcd
+		if *modified { //put updated config to etcd
 			oldConfig, err = yaml.Marshal(oldConfigMap)
 			if err != nil {
 				logger.Critical(nil, "Failed to convert oldConfigMap to oldConfig: %+v", err)
@@ -94,7 +94,7 @@ func UpdateOpenpitrixEtcd() {
 
 //Base old config in etcd, update that from new config.
 //return if there is diffrence from new and old
-func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{}, modifyed *bool) {
+func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{}, modified *bool) {
 	for k, v := range old {
 		kStr := k.(string)
 
@@ -111,7 +111,7 @@ func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{},
 		}
 
 		if t == reflect.Bool && ignoreKeys[kStr].(bool) {
-			continue //olny in this condition, ignore update old config
+			continue //only in this condition, ignore update old config
 		} else if t == reflect.Map {
 			//get sub-ignore-keys
 			ignoreKeys = ignoreKeys[kStr].(map[string]interface{})
@@ -130,12 +130,12 @@ func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{},
 		//update old config from new config
 		switch reflect.TypeOf(v).Kind() {
 		case reflect.Map:
-			compareOpenpitrixConfig(new[k].(AnyMap), v.(AnyMap), ignoreKeys, modifyed)
+			compareOpenpitrixConfig(new[k].(AnyMap), v.(AnyMap), ignoreKeys, modified)
 		default:
 			if new[k] != v {
 				logger.Info(nil, "Updating, key: %s, oldValue: %v, newValue: %v", k, v, new[k])
 				old[k] = new[k]
-				*modifyed = true
+				*modified = true
 			}
 		}
 	}
