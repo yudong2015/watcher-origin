@@ -18,7 +18,7 @@ const (
 	//     "registry_mirror": true
 	//   }
 	// }
-	IgnoreKeys   = "IGNORE_KEYS"
+	IgnoreKeys = "IGNORE_KEYS"
 )
 
 type Config struct {

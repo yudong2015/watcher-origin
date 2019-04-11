@@ -8,28 +8,32 @@ import (
 )
 
 func TestLoadConf(t *testing.T) {
-	t.Logf("Test load configurations...")
+	t.Logf("Test loading configurations...")
 
 	LocalEnv()
 	common.LoadConf()
 	global := common.Global
 
 	if global.Handler != Envs[Handler] {
-		t.Errorf("Handler value is wrong: %s, want: %s", global.Handler, Envs[Handler])
+		t.Errorf("WATCHER_HANDLER value is wrong: %s, want: %s", global.Handler, Envs[Handler])
 	}
 
 	if global.WatchedFile != Envs[WatchedFile] {
-		t.Errorf("WatchedFile value is wrong: %s, want: %s", global.WatchedFile, Envs[WatchedFile])
+		t.Errorf("WATCHER_WATCHED_FILE value is wrong: %s, want: %s", global.WatchedFile, Envs[WatchedFile])
 	}
 
 	d, _ := strconv.ParseInt(Envs[Duration], 10, 64)
 	if global.Duration != d {
-		t.Errorf("Duration value is wrong: %d, want: %s", global.Duration, Envs[Duration])
+		t.Errorf("WATCHER_DURATION value is wrong: %d, want: %s", global.Duration, Envs[Duration])
 	}
 
 	if global.LogLevel != Envs[LogLevel] {
-		t.Errorf("LogLevel value is wrong: %s, want: %s", global.LogLevel, Envs[LogLevel])
+		t.Errorf("WATCHER_LOG_LEVEL value is wrong: %s, want: %s", global.LogLevel, Envs[LogLevel])
 	}
 
-	t.Log("Test LoadConf successfully!")
+	if global.Etcd.Endpoints != Envs[EtcdEndpoints] {
+		t.Errorf("WATCHER_ETCD_ENDPOINTS value is wrong: %s, want: %s", global.Etcd.Endpoints, Envs[EtcdEndpoints])
+	}
+
+	t.Log("Test successfully!")
 }
