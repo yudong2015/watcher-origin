@@ -9,10 +9,10 @@
 
 ----
 
-**watcher** is a simple service to trigger a handler when **WATCHER_WATCHED_FILE** watched are updated.
+**watcher** is a simple service to trigger a handler when **WATCHER_WATCHED_FILE** is updated.
 
-In openpitrix, the global config is load into ConfigMap, watcher watches mounted volume dirs from ConfigMap and notifies the target process(UpdateOpenPitrixEtcd) that the config map has been changed.
-It currently only supports UpdateOpenPitrixEtcd.
+In openpitrix, the global config is load into ConfigMap when depolied by helm or kubernetes; watcher watches mounted volume dirs from ConfigMap and notifies the target process(UpdateOpenPitrixEtcd) that the config map has been changed.
+It currently only supports handler UpdateOpenPitrixEtcd.
 
 
 ----

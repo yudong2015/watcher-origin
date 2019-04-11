@@ -35,15 +35,6 @@ empty:=
 space:= $(empty) $(empty)
 CMDS=$(subst $(comma),$(space),$(CMD))
 
-.PHONY: generate-in-local
-generate-in-local: ## Generate code from protobuf file in local
-	cd ./api && make generate
-
-.PHONY: generate
-generate: ## Generate code from protobuf file in docker
-	$(RUN_IN_DOCKER) make generate-in-local
-	@echo "generate done"
-
 .PHONY: fmt-all
 fmt-all: ## Format all code
 	$(RUN_IN_DOCKER) $(GO_FMT) $(GO_FILES)
