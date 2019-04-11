@@ -8,12 +8,12 @@ import (
 	"openpitrix.io/openpitrix/pkg/logger"
 )
 
-const CONFIG_PREFIX = "WATCHER"
+const ConfigPrefix = "WATCHER"
 
 type Config struct {
 	WatchedFile string `default:"/opt/global_config.yaml"` //The file that need to be watched
 	Duration    int64  `default:"10"`                      //The duration for polling cycle which repeats
-	Handler     string `default:"UpdateOpenpitrixEtcd"`    //The action func name to run when files change
+	Handler     string `default:"UpdateOpenPitrixEtcd"`    //The action func name to run when files change
 	LogLevel    string `default:"info"`
 	Etcd        *Etcd
 }
@@ -23,7 +23,7 @@ var Global = new(Config)
 func LoadConf() {
 	loader := multiconfig.MultiLoader(
 		&multiconfig.TagLoader{},
-		&multiconfig.EnvironmentLoader{Prefix: CONFIG_PREFIX, CamelCase: true},
+		&multiconfig.EnvironmentLoader{Prefix: ConfigPrefix, CamelCase: true},
 	)
 	//get config from env
 	Global.Etcd = &Etcd{}

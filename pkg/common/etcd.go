@@ -45,7 +45,7 @@ type Mutex struct {
 	*concurrency.Mutex
 }
 
-func (etcd *Etcd) NewMutex(ctx context.Context, dlockKey string) (*Mutex, error) {
+func (etcd *Etcd) NewMutex(ctx context.Context, dLockKey string) (*Mutex, error) {
 	if etcd.Client == nil {
 		return nil, NilError{"The etcd client is nil!"}
 	}
@@ -54,7 +54,7 @@ func (etcd *Etcd) NewMutex(ctx context.Context, dlockKey string) (*Mutex, error)
 	if err != nil {
 		return nil, err
 	}
-	return &Mutex{concurrency.NewMutex(session, dlockKey)}, nil
+	return &Mutex{concurrency.NewMutex(session, dLockKey)}, nil
 }
 
 // Lock locks the mutex with a cancelable context. If the context is canceled

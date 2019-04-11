@@ -26,7 +26,7 @@ func init() {
 	}
 }
 
-func UpdateOpenpitrixEtcd() {
+func UpdateOpenPitrixEtcd() {
 	global := common.Global
 	etcd := global.Etcd
 
@@ -41,12 +41,12 @@ func UpdateOpenpitrixEtcd() {
 		logger.Critical(nil, "Failed to read %s: %+v", global.WatchedFile, err)
 		return //just do nothing if failed to read file
 	}
-	logger.Debug(nil, "global_config_yaml: %s", content)
+	logger.Debug(nil, "global_config yaml: %s", content)
 	err = yaml.Unmarshal(content, newConfigMap)
 	if err != nil {
-		logger.Critical(nil, "Failed to Unmarshal to newConfigMap: %+v", err)
+		logger.Critical(nil, "Failed to Unmarshal global_config yaml to config map: %+v", err)
 	}
-	logger.Debug(nil, "global_config_map: %v", newConfigMap)
+	logger.Debug(nil, "global_config map: %v", newConfigMap)
 
 	//get old config from etcd, and compare with global_config
 	ctx, cancel := context.WithTimeout(context.Background(), common.EtcdDlockTimeOut)
@@ -70,7 +70,7 @@ func UpdateOpenpitrixEtcd() {
 			if err != nil {
 				return err
 			}
-			compareOpenpitrixConfig(newConfigMap, oldConfigMap, IGNORE_KEYS, modified)
+			compareOpenPitrixConfig(newConfigMap, oldConfigMap, IGNORE_KEYS, modified)
 			logger.Debug(nil, "modified: %t, Config updated: %v", *modified, oldConfigMap)
 		}
 
@@ -92,9 +92,8 @@ func UpdateOpenpitrixEtcd() {
 	}
 }
 
-//Base old config in etcd, update that from new config.
-//return if there is diffrence from new and old
-func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{}, modified *bool) {
+//Base old config, update that from new config.
+func compareOpenPitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{}, modified *bool) {
 	for k, v := range old {
 		kStr := k.(string)
 
@@ -122,6 +121,7 @@ func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{},
 				continue
 			} else {
 				logger.Info(nil, "Updating, key: %s, oldValue: %v, newValue: %v", k, v, new[k])
+				//update old config from new config
 				old[k] = new[k]
 				continue
 			}
@@ -130,7 +130,7 @@ func compareOpenpitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{},
 		//update old config from new config
 		switch reflect.TypeOf(v).Kind() {
 		case reflect.Map:
-			compareOpenpitrixConfig(new[k].(AnyMap), v.(AnyMap), ignoreKeys, modified)
+			compareOpenPitrixConfig(new[k].(AnyMap), v.(AnyMap), ignoreKeys, modified)
 		default:
 			if new[k] != v {
 				logger.Info(nil, "Updating, key: %s, oldValue: %v, newValue: %v", k, v, new[k])

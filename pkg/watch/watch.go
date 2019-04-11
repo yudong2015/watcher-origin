@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	UPDATE_OP_ETCD = "UpdateOpenpitrixEtcd"
+	UpdateOpenPitrixEtcd = "UpdateOpenPitrixEtcd"
 )
 
 func Watch() {
@@ -56,8 +56,8 @@ func Watch() {
 
 func handle() {
 	switch common.Global.Handler {
-	case UPDATE_OP_ETCD:
-		handler.UpdateOpenpitrixEtcd()
+	case UpdateOpenPitrixEtcd:
+		handler.UpdateOpenPitrixEtcd()
 	default:
 		msg := fmt.Sprintf("The func %s not exist!", common.Global.Handler)
 		panic(msg)
