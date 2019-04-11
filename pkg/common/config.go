@@ -8,11 +8,22 @@ import (
 	"openpitrix.io/openpitrix/pkg/logger"
 )
 
-const ConfigPrefix = "WATCHER"
+const (
+	ConfigPrefix = "WATCHER"
+	//The env name of ignore keys that for update openpitrix etcd;
+	//You can set env for that, like(string):
+	// {
+	//   "runtime": true,
+	//   "cluster": {
+	//     "registry_mirror": true
+	//   }
+	// }
+	IgnoreKeys   = "IGNORE_KEYS"
+)
 
 type Config struct {
 	WatchedFile string `default:"/opt/global_config.yaml"` //The file that need to be watched
-	Duration    int64  `default:"10"`                      //The duration for polling cycle which repeats
+	Duration    int64  `default:"10"`                      //The duration for watcher polling cycle which repeats
 	Handler     string `default:"UpdateOpenPitrixEtcd"`    //The action func name to run when files change
 	LogLevel    string `default:"info"`
 	Etcd        *Etcd

@@ -14,17 +14,10 @@ import (
 	"openpitrix.io/openpitrix/pkg/logger"
 	"openpitrix.io/openpitrix/pkg/pi"
 	"openpitrix.io/watcher/pkg/common"
+	"os"
 )
 
 type AnyMap map[interface{}]interface{}
-
-var IGNORE_KEYS map[string]interface{}
-
-func init() {
-	IGNORE_KEYS = map[string]interface{}{
-		"runtime": true,
-	}
-}
 
 func UpdateOpenPitrixEtcd() {
 	global := common.Global
@@ -58,7 +51,7 @@ func UpdateOpenPitrixEtcd() {
 			return err
 		}
 		var modified = new(bool)
-		logger.Debug(nil, "get-count: %d", get.Count)
+		logger.Debug(nil, "get.count: %d", get.Count)
 		logger.Debug(nil, "get: %+v", get.Kvs)
 		if get.Count == 0 {
 			//init global_config if empty in etcd
@@ -68,9 +61,17 @@ func UpdateOpenPitrixEtcd() {
 			oldConfig = get.Kvs[0].Value
 			err := yaml.Unmarshal(oldConfig, oldConfigMap)
 			if err != nil {
+				logger.Error(ctx, "Failed to unmarshal old config to map!")
 				return err
 			}
-			compareOpenPitrixConfig(newConfigMap, oldConfigMap, IGNORE_KEYS, modified)
+
+			ignoreKeyMap := make(AnyMap)
+			err = yaml.Unmarshal([]byte(os.Getenv(common.IgnoreKeys)), ignoreKeyMap)
+			if err != nil {
+				logger.Error(ctx, "Failed to unmarshal ignore keys to map!")
+				return err
+			}
+			compareOpenPitrixConfig(newConfigMap, oldConfigMap, ignoreKeyMap, modified)
 			logger.Debug(nil, "modified: %t, Config updated: %v", *modified, oldConfigMap)
 		}
 
@@ -93,15 +94,14 @@ func UpdateOpenPitrixEtcd() {
 }
 
 //Base old config, update that from new config.
-func compareOpenPitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{}, modified *bool) {
+func compareOpenPitrixConfig(new, old AnyMap, ignoreKeys AnyMap, modified *bool) {
 	for k, v := range old {
 		kStr := k.(string)
-
 		logger.Debug(nil, "key: %s", kStr)
-		logger.Debug(nil, "oldValue: %+v", v)
-		logger.Debug(nil, "newValue: %+v", new[k])
 
-		//check if k is in ignore updating map
+
+		//check if k is in ignore keys
+		var subIgnoreKeys AnyMap
 		var t interface{}
 		if ignoreKeys == nil || ignoreKeys[kStr] == nil {
 			t = nil
@@ -110,30 +110,30 @@ func compareOpenPitrixConfig(new, old AnyMap, ignoreKeys map[string]interface{},
 		}
 
 		if t == reflect.Bool && ignoreKeys[kStr].(bool) {
+			logger.Info(nil,"Ignore to update config: %s", kStr)
 			continue //only in this condition, ignore update old config
 		} else if t == reflect.Map {
 			//get sub-ignore-keys
-			ignoreKeys = ignoreKeys[kStr].(map[string]interface{})
+			subIgnoreKeys = ignoreKeys[kStr].(AnyMap)
 		}
 
 		if v == nil { //check if old value and new value are nil
 			if new == nil || new[k] == nil {
 				continue
 			} else {
-				logger.Info(nil, "Updating, key: %s, oldValue: %v, newValue: %v", k, v, new[k])
+				logger.Info(nil, "Updating, key: %s, old value: %v, new value: %v", k, v, new[k])
 				//update old config from new config
 				old[k] = new[k]
 				continue
 			}
 		}
 
-		//update old config from new config
 		switch reflect.TypeOf(v).Kind() {
 		case reflect.Map:
-			compareOpenPitrixConfig(new[k].(AnyMap), v.(AnyMap), ignoreKeys, modified)
+			compareOpenPitrixConfig(new[k].(AnyMap), v.(AnyMap), subIgnoreKeys, modified)
 		default:
-			if new[k] != v {
-				logger.Info(nil, "Updating, key: %s, oldValue: %v, newValue: %v", k, v, new[k])
+			if new[k] != v { //update old config from new config
+				logger.Info(nil, "Updating, key: %s, old value: %v, new value: %v", k, v, new[k])
 				old[k] = new[k]
 				*modified = true
 			}

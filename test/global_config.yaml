@@ -28,7 +28,7 @@ task:
   max_working_tasks: 20
 pilot:
   ip: 127.0.0.1
-  port: 9115
+  port: 9114
 runtime:
   aliyun:
     advanced_options: null

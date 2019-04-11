@@ -3,10 +3,10 @@ package test
 import (
 	"testing"
 
-	"openpitrix.io/watcher/pkg/common"
 	"context"
-	"openpitrix.io/openpitrix/pkg/pi"
 	"io/ioutil"
+	"openpitrix.io/openpitrix/pkg/pi"
+	"openpitrix.io/watcher/pkg/common"
 )
 
 func TestEtcd(t *testing.T) {
@@ -42,10 +42,8 @@ func TestEtcd(t *testing.T) {
 		}
 		t.Logf("The new: %+v", get.Kvs)
 
-
 		return nil
 	})
-
 
 	t.Log("Test etcd successfully!")
 }
